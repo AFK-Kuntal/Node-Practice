@@ -1,6 +1,14 @@
 // creating server and routing
+const fs = require("fs");
 const http = require("http");
 const url = require("url");
+
+const data = fs.readFileSync(`${__dirname}/data/data.json`, "utf-8");
+const productData = JSON.parse(data);
+console.log(data);
+console.log(typeof data);
+console.log(typeof productData);
+//as this top level code will only run once the code runs so running it synchronusly will not effect code execution and also if we write all of this inside the function then everytime a requests come we have to read the file. but in this case we are only reading the file once
 
 const server = http.createServer((req, res) => {
   //   console.log(req);
@@ -9,7 +17,10 @@ const server = http.createServer((req, res) => {
 
   if (path === "/") res.end("HomePage");
   else if (path === "/overview") res.end("Overview of the Page");
-  else {
+  else if (path === "/api") {
+    res.writeHead(200, { "content-type": "application/json" });
+    res.end(data);
+  } else {
     res.writeHead(404, {
       "content-type": "text/html",
       "my-header": "custom header",
